@@ -153,7 +153,7 @@ switch (mesec) {
 
 console.log('----------------------------------------------------')
 
-let znak = 'pow';
+let znak = 'sqrt';
 let br1 = 102;
 let br2 = 33.2;
 switch (znak) {
@@ -170,7 +170,8 @@ switch (znak) {
         console.log(br1 / br2);
         break;
         case 'sqrt':
-        console.log(Math.sqrt(br1));
+        console.log(Math.sqrt(br1),)
+        console.log(Math.sqrt(br2));
         break;
         case 'pow':
         console.log(Math.pow(br1, 2));
@@ -184,3 +185,25 @@ switch (znak) {
     default:
         console.log('Znak ne valja')
 }
+
+
+let korisnik = 'dsds';
+
+switch(korisnik) {
+    case 'user':
+        console.log('Korisnik je user')
+        break
+    case 'moderator':
+        console.log('Korisnik je moderator')
+        break
+    case 'admin':
+        console.log('Korisnik je admin')
+        break
+        default:
+            console.log('Nepostojeci korisnik')
+}
+
+if (korisnik=='user') {console.log('Korisnik je user')}
+else if (korisnik=='admin') {console.log('korisnik je admin')}
+else if (korisnik=='moderator') {console.log('korisnik je moderator')}
+else {console.log('Nepostojeci dfsdf korisnik')}
