@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="index.js" defer></script>
+    <title>АутоШарац</title>
+</head>
+
+<body>
+    <header>
+        <h1>АутоШарац</h1>
+    </header>
+    
+    <section class="input-container">
+        <div>
+            <form class="forma">
+                <input type="text" name="imeprezime" id="imeprezime" placeholder="Ime i Prezime" required>
+            </form>
+        </div>
+        <div>
+            <Select name="marka" id="auto-marka">
+                <optgroup label="Scion">
+                    <option value="19UUA8F50DA160249" selected>tC</option>
+                </optgroup>
+                <optgroup label="Cadillac">
+                    <option value="1GYS3AEF7DR496039">CTS</option>
+                </optgroup>
+                <optgroup label="BMW">
+                    <option value="2FMDK4KC0AB695258">525</option>
+                    <option value="2FMDK4KC1AB495258">X5</option>
+                    <option value="WAUDF68E55A006958">M3</option>
+                </optgroup>
+                <optgroup label="Volkswagen">
+                    <option value="WAUAGAFDXEN710904">Passat</option>
+                    <option value="WAUVKAFR5AA133227">GTI</option>
+                </optgroup>
+                <optgroup label="Chevrolet">
+                    <option value="WAUDGAFL7CA205458">Suburban 1500</option>
+                    <option value="WAUUL58E95A401485">Astro</option>
+                </optgroup>
+                <optgroup label="Nissan">
+                    <option value="WBA3T3C5XF5402761">NV2500</option>
+                </optgroup>
+            </Select>
+        </div>
+        <div>
+            <input type="button" class="btn-kupi" value="KUPI">
+        </div>
+    </section>
+    <section id="item-list">
+
+    </section>
+    <footer>
+        <label>Криејтед бај:</label>
+        <label id="creator">Марко Краљевић и Муса Кесаџија</label>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+html, body{
+    height: 100%;
+    width: 100%;
+}
+body{
+    display: block;
+    margin:0px;
+    text-align: center;
+    background-image:linear-gradient( rgba(244, 244, 244, 0.2), rgba(244, 244, 244, 0.2) ), url('mk.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position:center top;
+    background-attachment: fixed;
+}
+header{
+    position: sticky;
+    margin: 0;
+}
+#logo{
+    width:500px;
+    height:auto;
+}
+h1{
+    line-height: 50px;
+    font-size: 50px;
+}
+.input-container div *{
+    display: inline-block;
+}
+.input-container div{
+    margin: 10px auto;
+}
+select,option{
+    cursor: pointer;
+}
+
+#btn-reserve{
+    
+}
+#btn-reserve:hover{
+    
+
+}
+.btn{
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    background-color: rgb(24, 125, 212);
+    border: 0px solid;
+    color:white;
+}
+.btn:hover{
+    cursor:pointer;
+    background-color:rgb(84, 163, 233);
+}
+
+#price-container{
+    min-width: 200px;
+    width: 500px;
+    color: rgb(24, 125, 212);
+    margin: 75px auto;
+    font-size: 20px;
+    border:2px solid rgb(24, 125, 212);;
+}
+
+#price-container label{
+    margin:auto auto;
+    width: auto;
+    font-size: 50px;
+    font-weight: bold;
+}
+#item-list{
+    margin-top: 50px;
+}
+ .item label{
+     font-size: 2em;
+ }
+ .info-rel,.info-price{
+    font-weight: bold;
+ }
+ footer{
+     position: absolute;
+     bottom: 0;
+     left:0;
+ }
+ footer label{
+    font-size: 1em;
+    font-weight: bold;
+ }
