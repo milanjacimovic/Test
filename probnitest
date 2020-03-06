@@ -68,6 +68,7 @@ let poruke = [];
 const renderPoruka = (poruke) => {
     let divPrikaz = document.createElement('div')
     divPrikaz.innerHTML = ''
+    prikaz.innerHTML=''
     prikaz.append(divPrikaz)
     for (let el of poruke) {
         let div = document.createElement('div');
@@ -76,11 +77,15 @@ const renderPoruka = (poruke) => {
     }
 }
 
-Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
+const proba = ()=> {Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
     let { data } = response.data
     poruke = data
     renderPoruka(poruke)
 }
 )
+}
+setInterval(proba, 100)
+
+
 
 
