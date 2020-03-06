@@ -1,0 +1,86 @@
+import Axios from "axios";
+
+let app = document.querySelector('#app');
+let iznad = document.querySelector('#iznad');
+let ispod = document.querySelector('#ispod');
+let prikaz = document.querySelector('#prikaz');
+let unosUsername = document.createElement('input');
+unosUsername.type = 'text';
+let dugmeUsername = document.createElement('button');
+dugmeUsername.innerHTML = 'Postavi username';
+let unosPoruke = document.createElement('input');
+unosPoruke.type = 'text';
+let dugmePoruka = document.createElement('button');
+dugmePoruka.innerHTML = 'Unos poruke';
+let dugmeIspisPoruka = document.createElement('button');
+let username = '';
+let poruka = '';
+dugmeIspisPoruka.innerHTML = 'MOJE PORUKE';
+app.append(iznad, prikaz, ispod);
+iznad.append(unosUsername, dugmeUsername);
+prikaz.append(dugmeIspisPoruka);
+ispod.append(unosPoruke, dugmePoruka)
+
+
+
+dugmeUsername.addEventListener('click', () => {
+    if (unosUsername.value == '') {
+        alert('Morate uneti username!')
+    }
+    else {
+        
+        username = unosUsername.value;
+        unosUsername.value = ''
+    }
+}
+)
+dugmeIspisPoruka.addEventListener('click', () => {
+    Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
+        let { data } = response.data
+        poruke = data
+    }
+    ).then(Axios.post('https://coetus.herokuapp.com/api/message', {
+        username: `${username}`
+    }))
+    let filtriranePoruke = poruke.filter(poruka => poruka.username == username)
+    
+    renderPoruka(filtriranePoruke)
+})
+dugmePoruka.addEventListener('click', () => {
+    if (unosPoruke.value == '') {
+        alert('Morate uneti poruku!')
+    }
+    else {
+        
+        poruka = unosPoruke.value;
+        unosPoruke.value = ''
+        Axios.put('https://coetus.herokuapp.com/api/message', {
+            username: `${username}`, message: `${poruka}`
+        })
+    }
+    let filtriranePoruke = poruke.filter(poruka => poruka.username == username)
+    
+    renderPoruka(filtriranePoruke)
+})
+
+let poruke = [];
+
+const renderPoruka = (poruke) => {
+    let divPrikaz = document.createElement('div')
+    divPrikaz.innerHTML = ''
+    prikaz.append(divPrikaz)
+    for (let el of poruke) {
+        let div = document.createElement('div');
+        divPrikaz.append(div);
+        div.innerHTML = `${el.username} je napisao: ${el.message}`
+    }
+}
+
+Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
+    let { data } = response.data
+    poruke = data
+    renderPoruka(poruke)
+}
+)
+
+
