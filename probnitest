@@ -2,90 +2,94 @@ import Axios from "axios";
 
 let app = document.querySelector('#app');
 let iznad = document.querySelector('#iznad');
-let ispod = document.querySelector('#ispod');
 let prikaz = document.querySelector('#prikaz');
+let ispod = document.querySelector('#ispod');
+app.append(iznad, prikaz, ispod);
 let unosUsername = document.createElement('input');
 unosUsername.type = 'text';
+unosUsername.placeholder = 'Unesite username';
+iznad.append(unosUsername);
 let dugmeUsername = document.createElement('button');
-dugmeUsername.innerHTML = 'Postavi username';
+dugmeUsername.innerHTML = 'Sacuvaj username'
+iznad.append(dugmeUsername)
+let username = ''
+let poruka = ''
+let nizPoruka = []
+let datum = new Date()
 let unosPoruke = document.createElement('input');
 unosPoruke.type = 'text';
-let dugmePoruka = document.createElement('button');
-dugmePoruka.innerHTML = 'Unos poruke';
-let dugmeIspisPoruka = document.createElement('button');
-let username = '';
-let poruka = '';
-dugmeIspisPoruka.innerHTML = 'MOJE PORUKE';
-app.append(iznad, prikaz, ispod);
-iznad.append(unosUsername, dugmeUsername);
-prikaz.append(dugmeIspisPoruka);
-ispod.append(unosPoruke, dugmePoruka)
+unosPoruke.placeholder = 'Unesite Vasu poruku ovde'
+ispod.append(unosPoruke);
+let dugmeUnosPoruke = document.createElement('button');
+dugmeUnosPoruke.innerHTML = 'Prosledi poruku';
+ispod.append(dugmeUnosPoruke);
 
+let dugmePrikaz = document.createElement('button');
+dugmePrikaz.innerHTML = 'moje poruke';
+prikaz.append(dugmePrikaz)
 
+dugmePrikaz.addEventListener('click', () => {
+    let filtriranePoruke = nizPoruka.filter(poruka => poruka.username == username)
+    prostorZaPoruke.innerHTML = ''
+    if (filtriranePoruke.length>0){
+    ispisiPoruke(filtriranePoruke)}
+    else {console.warn('Za izabrani username ne postoji nijedna poruka')}
+})
 
 dugmeUsername.addEventListener('click', () => {
-    if (unosUsername.value == '') {
-        alert('Morate uneti username!')
+    if (unosUsername.value.trim() == '') {
+        alert('Morate uneti username')
     }
     else {
-        
-        username = unosUsername.value;
+        username = unosUsername.value
+        console.log(username);
         unosUsername.value = ''
     }
-}
-)
-dugmeIspisPoruka.addEventListener('click', () => {
-    Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
-        let { data } = response.data
-        poruke = data
-    }
-    ).then(Axios.post('https://coetus.herokuapp.com/api/message', {
-        username: `${username}`
-    }))
-    let filtriranePoruke = poruke.filter(poruka => poruka.username == username)
-    
-    renderPoruka(filtriranePoruke)
+
 })
-dugmePoruka.addEventListener('click', () => {
-    if (unosPoruke.value == '') {
-        alert('Morate uneti poruku!')
+
+dugmeUnosPoruke.addEventListener('click', () => {
+    if (unosPoruke.value.trim() == '') {
+        alert('Morate uneti poruku')
     }
     else {
-        
-        poruka = unosPoruke.value;
+        poruka = unosPoruke.value
+        console.log(poruka);
         unosPoruke.value = ''
-        Axios.put('https://coetus.herokuapp.com/api/message', {
-            username: `${username}`, message: `${poruka}`
-        })
+        proslediPoruku(username, poruka)
+        nizPoruka.push({ username: `${username}`, message: `${poruka}`, timestamp: `${datum}` })
+        ispisiPoruke(nizPoruka)
+
     }
-    let filtriranePoruke = poruke.filter(poruka => poruka.username == username)
-    
-    renderPoruka(filtriranePoruke)
+
 })
+let prostorZaPoruke = document.createElement('div');
+prostorZaPoruke.id = 'prostor'
+prikaz.append(prostorZaPoruke)
 
-let poruke = [];
+const ispisiPoruke = (niz) => {
 
-const renderPoruka = (poruke) => {
-    let divPrikaz = document.createElement('div')
-    divPrikaz.innerHTML = ''
-    prikaz.innerHTML=''
-    prikaz.append(divPrikaz)
-    for (let el of poruke) {
-        let div = document.createElement('div');
-        divPrikaz.append(div);
-        div.innerHTML = `${el.username} je napisao: ${el.message}`
+    prostorZaPoruke.innerHTML = ''
+    for (let el of niz) {
+        let datum = new Date(el.timestamp)
+        let div = document.createElement('div')
+        prostorZaPoruke.append(div)
+        div.innerHTML = `Korisnik ${el.username} je napisao ${el.message} ${datum}`
     }
 }
 
-const proba = ()=> {Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
-    let { data } = response.data
-    poruke = data
-    renderPoruka(poruke)
+const getPoruke = () => {
+    Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
+        let { data } = response.data;
+        nizPoruka = data;
+        console.log(nizPoruka);
+        ispisiPoruke(nizPoruka)
+    })
 }
-)
-}
-setInterval(proba, 100)
+getPoruke()
+
+const proslediPoruku = (username, message) => { Axios.put('https://coetus.herokuapp.com/api/message', { username: username, message: message }) }
 
 
-
+setInterval(getPoruke, 10000)
 
