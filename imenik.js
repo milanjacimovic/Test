@@ -1,103 +1,94 @@
-import axios from 'axios'
-const app = document.querySelector('#app')
+import Axios from "axios";
 
-let contacts = []
-axios.get('http://localhost:3000/contacts')
-    .then(res => {
-        contacts = res.data
-        renderList(contacts)
-    })
+let app = document.querySelector('#app');
+let iznad = document.querySelector('#iznad');
+let prikaz = document.querySelector('#prikaz');
+let ispod = document.querySelector('#ispod');
+app.append(iznad, prikaz, ispod);
+let unosUsername = document.createElement('input');
+unosUsername.type = 'text';
+unosUsername.placeholder = 'Unesite username';
+iznad.append(unosUsername);
+let dugmeUsername = document.createElement('button');
+dugmeUsername.innerHTML = 'Sacuvaj username'
+iznad.append(dugmeUsername)
+let username = ''
+let poruka = ''
+let nizPoruka = []
+let datum = new Date()
+let unosPoruke = document.createElement('input');
+unosPoruke.type = 'text';
+unosPoruke.placeholder = 'Unesite Vasu poruku ovde'
+ispod.append(unosPoruke);
+let dugmeUnosPoruke = document.createElement('button');
+dugmeUnosPoruke.innerHTML = 'Prosledi poruku';
+ispod.append(dugmeUnosPoruke);
 
+let dugmePrikaz = document.createElement('button');
+dugmePrikaz.innerHTML = 'moje poruke';
+prikaz.append(dugmePrikaz)
 
-const Form = () => {
-    const form = document.createElement('form')
+dugmePrikaz.addEventListener('click', () => {
+    let filtriranePoruke = nizPoruka.filter(poruka => poruka.username == username)
+    prostorZaPoruke.innerHTML = ''
+    if (filtriranePoruke.length>0){
+    ispisiPoruke(filtriranePoruke)}
+    else {console.warn('Za izabrani username ne postoji nijedna poruka')}
+})
 
-    const inputName = document.createElement('input')
-    inputName.type = 'text'
-    inputName.placeholder = 'Име контакта'
-    form.appendChild(inputName)
-
-    const inputNumber = document.createElement('input')
-    inputNumber.type = 'text'
-    inputNumber.placeholder = 'Број'
-    form.appendChild(inputNumber)
-
-    const submitBtn = document.createElement('input')
-    submitBtn.type = 'submit'
-    submitBtn.value = 'Додај'
-    form.appendChild(submitBtn)
-
-
-
-    const pronadjiOsobu = document.createElement('input')
-    form.append(pronadjiOsobu)
-    pronadjiOsobu.type = 'text'
-    pronadjiOsobu.addEventListener('input', () => {
-        const filtrirani = contacts.filter(contact => contact.name.includes(pronadjiOsobu.value))
-
-        renderList(filtrirani)
-        console.log(filtrirani);
-
-
-
-    })
-
-    form.addEventListener('submit', e => {
-        e.preventDefault()
-        if (inputName.value.trim() == '' || inputNumber.value.trim() == '') {
-            console.warn('Поља не могу бити празна')
-            return
-        }
-        addContact(inputName.value, inputNumber.value)
-        inputName.value = '';
-        inputNumber.value = ''
-
-    })
-
-    return form
-}
-
-app.appendChild(Form())
-
-const addContact = (name, number) => {
-    if (contacts.find(el => el.name == name)) {
-        console.warn(`Већ постоји контакт са именом '${name}'`)
-        return
+dugmeUsername.addEventListener('click', () => {
+    if (unosUsername.value.trim() == '') {
+        alert('Morate uneti username')
+    }
+    else {
+        username = unosUsername.value
+        console.log(username);
+        unosUsername.value = ''
     }
 
-    axios.post('http://localhost:3000/contacts', { name, number })
-        .then(res => {
-            contacts.push(res.data)
-            renderList(contacts)
-        })
+})
 
+dugmeUnosPoruke.addEventListener('click', () => {
+    if (unosPoruke.value.trim() == '') {
+        alert('Morate uneti poruku')
+    }
+    else {
+        poruka = unosPoruke.value
+        console.log(poruka);
+        unosPoruke.value = ''
+        proslediPoruku(username, poruka)
+        nizPoruka.push({ username: `${username}`, message: `${poruka}`, timestamp: `${datum}` })
+        ispisiPoruke(nizPoruka)
+
+    }
+
+})
+let prostorZaPoruke = document.createElement('div');
+prostorZaPoruke.id = 'prostor'
+prikaz.append(prostorZaPoruke)
+
+const ispisiPoruke = (niz) => {
+
+    prostorZaPoruke.innerHTML = ''
+    for (let el of niz) {
+        let datum = new Date(el.timestamp)
+        let div = document.createElement('div')
+        prostorZaPoruke.append(div)
+        div.innerHTML = `Korisnik ${el.username} je napisao ${el.message} ${datum}`
+    }
 }
 
-const ContactList = (contacts) => {
-    const list = document.createElement('ul')
-    list.id = "contact-list"
-
-    contacts.forEach(contact => {
-        let item = document.createElement('li')
-        item.textContent = `${contact.name} - ${contact.number}`
-        list.appendChild(item)
-        let dugmence = document.createElement('button')
-        item.append(dugmence)
-        dugmence.innerHTML='OBRISI'
-        dugmence.addEventListener('click', ()=>{
-            item.remove()
-            axios.delete(`http://localhost:3000/contacts/${contact.id}`)
-        })
+const getPoruke = () => {
+    Axios.get('https://coetus.herokuapp.com/api/message').then(response => {
+        let { data } = response.data;
+        nizPoruka = data;
+        console.log(nizPoruka);
+        ispisiPoruke(nizPoruka)
     })
-
-
-    return list
-
-
 }
-app.appendChild(ContactList(contacts))
+getPoruke()
 
-const renderList = (contacts) => {
-    document.querySelector('#contact-list').remove()
-    app.appendChild(ContactList(contacts))
-}
+const proslediPoruku = (username, message) => { Axios.put('https://coetus.herokuapp.com/api/message', { username: username, message: message }) }
+
+
+setInterval(getPoruke, 10000)
